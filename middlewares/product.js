@@ -1,9 +1,9 @@
-const { todoTitleSchema } = require('../validation');
-const { getSingleTodoById } = require('../services');
+const { addProductSchema } = require('../validation');
+const { getSingleProductById } = require('../services');
 
-const validateTodoAddition = (req, res, next) => {
+const validateProductAddition = (req, res, next) => {
   try {
-    const { error } = todoTitleSchema.validate(req.body);
+    const { error } = addProductSchema.validate(req.body);
     if (!error) {
       return next();
     }
@@ -19,33 +19,17 @@ const validateTodoAddition = (req, res, next) => {
   }
 };
 
-const checkIfTodoExists = async (req, res, next) => {
+const checkIfProductExists = async (req, res, next) => {
   try {
-    const { todoId } = req.params;
-    const todo = await getSingleTodoById(todoId);
-    if (todo) {
-      req.todo = todo;
+    const { productId } = req.params;
+    const product = await getSingleProductById(productId);
+    if (product) {
+      req.product = product;
       return next();
     }
     return res.status(404).json({
       status: 'Fail',
-      message: 'Todo does not exist',
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'Fail',
-      message: 'Something went wrong',
-    });
-  }
-};
-const checkIfTodoIsForCurrentUser = async (req, res, next) => {
-  try {
-    if (req.todo.user_id === req.user.id || req.user.is_admin) {
-      return next();
-    }
-    return res.status(404).json({
-      status: 'Fail',
-      message: 'Todo does not belong to user',
+      message: 'Product does not exist',
     });
   } catch (error) {
     return res.status(500).json({
@@ -55,4 +39,21 @@ const checkIfTodoIsForCurrentUser = async (req, res, next) => {
   }
 };
 
-module.exports = { validateTodoAddition, checkIfTodoExists, checkIfTodoIsForCurrentUser };
+const checkIfProductIsForCurrentUser = async (req, res, next) => {
+  try {
+    if (req.product.owner_id === req.user.id) {
+      return next();
+    }
+    return res.status(404).json({
+      status: 'Fail',
+      message: 'Product does not belong to user',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'Fail',
+      message: 'Something went wrong',
+    });
+  }
+};
+
+module.exports = { validateProductAddition, checkIfProductExists, checkIfProductIsForCurrentUser };

@@ -1,33 +1,28 @@
 const { Router } = require('express');
 const {
-  addTodo,
-  fetchTodo,
-  updateTitleOfTodo,
-  deleteTheTodo,
-  updateStatusOfTodo,
-  allTodosForSingleUser,
-  adminAllTodos,
+  addProduct,
+  updateProduct,
+  deleteTheProduct,
+  allProducts,
+  fetchProduct,
+  rateTheProduct,
 } = require('../controllers');
 const {
   authenticate,
-  checkIfTodoExists,
-  checkIfTodoIsForCurrentUser,
-  validateTodoAddition,
-  adminAccessValidator,
+  validateProductAddition,
+  checkIfProductExists,
+  checkIfProductIsForCurrentUser,
+  ratingValidator,
 } = require('../middlewares');
 
-const todoRouter = Router();
-todoRouter.use(authenticate);
+const productRouter = Router();
 
-todoRouter.post('/todo', validateTodoAddition, addTodo);
-todoRouter.get('/todo', allTodosForSingleUser);
-todoRouter.get('/todos', adminAccessValidator, adminAllTodos);
+productRouter.post('/product', authenticate, validateProductAddition, addProduct);
+productRouter.get('/product', allProducts);
 
-todoRouter.use('/todo/:todoId', checkIfTodoExists, checkIfTodoIsForCurrentUser);
+productRouter.put('/product/:productId', authenticate, checkIfProductExists, checkIfProductIsForCurrentUser, updateProduct);
+productRouter.delete('/product/:productId', authenticate, checkIfProductExists, checkIfProductIsForCurrentUser, deleteTheProduct);
+productRouter.get('/product/:productId', checkIfProductExists, fetchProduct);
+productRouter.put('/product/rating/:productId', authenticate, checkIfProductExists, ratingValidator, rateTheProduct);
 
-todoRouter.get('/todo/:todoId', fetchTodo);
-todoRouter.put('/todo/:todoId', updateTitleOfTodo);
-todoRouter.delete('/todo/:todoId', deleteTheTodo);
-todoRouter.patch('/todo/:todoId', updateStatusOfTodo);
-
-module.exports = todoRouter;
+module.exports = productRouter;

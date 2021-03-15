@@ -1,4 +1,4 @@
 const userRouter = require('./user');
-const todoRouter = require('./todo');
+const productRouter = require('./product');
 
-module.exports = { userRouter, todoRouter };
+module.exports = { userRouter, productRouter };

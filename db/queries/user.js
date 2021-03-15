@@ -1,15 +1,16 @@
-const insertUser = `insert into user_info (
+const insertUser = `insert into user_details (
     id,
     email,
     first_name,
     last_name,
-    password,
-    gender) values ($1, $2, $3, $4, $5, $6)
-    returning id, email, first_name, last_name, created_at, is_admin, gender;
+    store_name,
+    phone_number,
+    password) values ($1, $2, $3, $4, $5, $6, $7)
+    returning id, email, first_name, last_name, store_name, phone_number, created_at;
 `;
 
 const getUserByEmail = `
-    select * from user_info
+    select * from user_details
     where email = $1;
 `;
 

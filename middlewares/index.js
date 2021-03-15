@@ -1,14 +1,15 @@
 const { validateSignUp, checkIfUserExists, validateLogin } = require('./user');
-const { validateTodoAddition, checkIfTodoExists, checkIfTodoIsForCurrentUser } = require('./todo');
-const { authenticate, adminAccessValidator } = require('./auth');
+const { validateProductAddition, checkIfProductExists, checkIfProductIsForCurrentUser } = require('./product');
+const { authenticate, ratingValidator } = require('./auth');
 
 module.exports = {
   validateSignUp,
-  checkIfUserExists,
   validateLogin,
-  validateTodoAddition,
-  checkIfTodoExists,
-  checkIfTodoIsForCurrentUser,
+  validateProductAddition,
+  checkIfUserExists,
   authenticate,
-  adminAccessValidator,
+  checkIfProductExists,
+  checkIfProductIsForCurrentUser,
+  ratingValidator,
+//   adminAccessValidator,
 };

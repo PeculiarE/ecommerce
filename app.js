@@ -1,6 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
-const { userRouter, todoRouter } = require('./routes');
+const { userRouter, productRouter } = require('./routes');
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(logger('dev'));
 
 app.get('/', (req, res) => res.json({ welcome: 'hello' }));
 app.use(userRouter);
-app.use(todoRouter);
+app.use(productRouter);
 
 app.listen(4000, () => {
   console.log(`Example app listening at http://localhost:${4000}`);

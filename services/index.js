@@ -1,24 +1,25 @@
 const {
-  addNewUser, getSingleUserByEmail,
+  addNewUser,
+  getSingleUserByEmail,
 } = require('./user');
 const {
-  addNewTodo,
-  getSingleTodoById,
-  updateSingleTodoTitle,
-  deleteSingleTodo,
-  getAllTodos,
-  getAllTodosForASingleUser,
-  updateSingleTodoStatus,
-} = require('./todo');
+  addNewProduct,
+  getSingleProductById,
+  updateSingleProduct,
+  deleteSingleProduct,
+  getAllProducts,
+  getAllRatings,
+  rateSingleProduct,
+} = require('./product');
 
 module.exports = {
   addNewUser,
   getSingleUserByEmail,
-  addNewTodo,
-  getSingleTodoById,
-  updateSingleTodoTitle,
-  deleteSingleTodo,
-  getAllTodos,
-  getAllTodosForASingleUser,
-  updateSingleTodoStatus,
+  addNewProduct,
+  getSingleProductById,
+  updateSingleProduct,
+  deleteSingleProduct,
+  getAllProducts,
+  getAllRatings,
+  rateSingleProduct,
 };

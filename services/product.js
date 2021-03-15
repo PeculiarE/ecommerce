@@ -1,45 +1,107 @@
 const { generateUUID } = require('../utils');
 const db = require('../db/setup');
 const {
-  insertTodo,
-  fetchAllTodos,
-  fetchAllTodosForSingleUser,
-  fetchSingleTodoById,
-  updateTodoTitle,
-  deleteTodo,
-  updateTodoStatus,
-} = require('../db/queries/todo');
+  insertProduct,
+  fetchSingleProductById,
+  updateProductDetails,
+  deleteProduct,
+  fetchAllProducts,
+  insertProductRating,
+  calculateProductRating,
+  updateProductRating,
+  fetchAllProductRatings,
+} = require('../db/queries/product');
 
-const addNewTodo = async (data, userId) => {
+const addNewProduct = async (data, user) => {
   const id = generateUUID();
-  const { title } = data;
-  return db.one(insertTodo, [id, title, userId]);
+  const ownerId = user.id;
+  const storeName = user.store_name;
+  const averageRating = 0.00;
+  const {
+    name, category, price, color, description, availableStock, size,
+  } = data;
+  const finalPrice = `${price.currency} ${price.value}`;
+  return db.one(
+    insertProduct, [
+      id,
+      name,
+      category,
+      finalPrice,
+      color,
+      description,
+      ownerId,
+      storeName,
+      averageRating,
+      availableStock,
+      size,
+    ],
+  );
 };
 
-const getAllTodos = async () => db.manyOrNone(fetchAllTodos);
+const getSingleProductById = async (productId) => db.oneOrNone(fetchSingleProductById, [productId]);
 
-const getAllTodosForASingleUser = async (userId) => (
-  db.manyOrNone(fetchAllTodosForSingleUser, [userId])
-);
+const updateSingleProduct = async (product, data) => {
+  const obj = {
+    name: product.name,
+    category: product.category,
+    price: product.price,
+    color: product.color,
+    description: product.description,
+    availableStock: product.available_stock,
+    size: product.size,
+  };
+  Object.keys(data).forEach((key) => {
+    Object.keys(obj).forEach((el) => {
+      if (key === el) {
+        obj[el] = data[key];
+        if (key === 'price') {
+          obj[el] = `NGN ${data[key]}`;
+        }
+      }
+    });
+  });
+  return db.one(
+    updateProductDetails, [
+      product.id,
+      obj.name,
+      obj.category,
+      obj.price,
+      obj.color,
+      obj.description,
+      obj.availableStock,
+      obj.size,
+    ],
+  );
+};
 
-const getSingleTodoById = async (todoId) => db.oneOrNone(fetchSingleTodoById, [todoId]);
+const deleteSingleProduct = async (productId) => db.none(deleteProduct, [productId]);
 
-// const getSingleTodoByTitle;
+const getAllProducts = async () => db.manyOrNone(fetchAllProducts);
 
-const updateSingleTodoTitle = async (data, todoId) => db.one(updateTodoTitle, [data, todoId]);
+const getAllRatings = async (productId) => db.manyOrNone(fetchAllProductRatings, [productId]);
 
-const deleteSingleTodo = async (todoId) => db.none(deleteTodo, [todoId]);
+const calculateSingleProduct = async (id) => db.one(calculateProductRating, [id]);
 
-const updateSingleTodoStatus = async (todoId, isComplete) => (
-  db.one(updateTodoStatus, [todoId, isComplete])
-);
+const updateSingleProductAvgRating = async (id, value) => db.one(updateProductRating, [id, value]);
+
+const rateSingleProduct = async (product, rating, rater) => {
+  const { id, name } = product;
+  console.log(id, name, rating, product.owner_id, rater);
+  db.one(insertProductRating, [id, name, rating, product.owner_id, rater]);
+  const calcAvgRating = await calculateSingleProduct(id);
+  console.log(calcAvgRating);
+  const avgRating = parseFloat(calcAvgRating.average_rating).toFixed(2);
+  console.log(avgRating);
+  const y = await updateSingleProductAvgRating(id, avgRating);
+  return y;
+};
 
 module.exports = {
-  addNewTodo,
-  getSingleTodoById,
-  updateSingleTodoTitle,
-  deleteSingleTodo,
-  getAllTodos,
-  getAllTodosForASingleUser,
-  updateSingleTodoStatus,
+  addNewProduct,
+  getSingleProductById,
+  updateSingleProduct,
+  deleteSingleProduct,
+  getAllProducts,
+  rateSingleProduct,
+  getAllRatings,
 };

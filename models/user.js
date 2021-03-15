@@ -1,13 +1,15 @@
-const userArray = [
+const userModel = [
   {
     id: '719a6c77-f46e-43ba-bbdb-fd7fa890af71',
-    email: 'perhis@gmail.com',
     firstName: 'Peculiar',
     lastName: 'Erhis',
-    password: '1234567',
-    gender: 'female',
-    isAdmin: true,
+    email: 'perhis@gmail.com',
+    storeName: 'Peculiar Stores',
+    phoneNumber: '081-2643-2823',
+    password: 'Princess26',
+    createdAt: '',
+    updatedAt: '',
   },
 ];
 
-module.exports = userArray;
+module.exports = userModel;

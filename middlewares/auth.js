@@ -1,4 +1,5 @@
 const { verifyToken } = require('../utils');
+const { getAllRatings } = require('../services');
 
 const authenticate = (req, res, next) => {
   try {
@@ -26,16 +27,30 @@ const authenticate = (req, res, next) => {
     });
   }
 };
-const adminAccessValidator = (req, res, next) => {
+const ratingValidator = async (req, res, next) => {
   try {
-    if (req.user.is_admin) {
+    if (req.user.id !== req.product.owner_id) {
+      const rater = await getAllRatings(req.product.id);
+      console.log(rater);
+      if (rater.length) {
+        rater.forEach((el) => {
+          if (String(el.rater_id) === String(req.user.id)) {
+            return res.status(403).json({
+              status: 'Fail',
+              message: 'You have already rated this product.',
+            });
+          }
+          return next();
+        });
+      }
       return next();
     }
     return res.status(403).json({
       status: 'Fail',
-      message: 'Only admins can access this.',
+      message: 'You are not allowed to rate your own product.',
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       status: 'Fail',
       message: 'Something went wrong',
@@ -43,4 +58,4 @@ const adminAccessValidator = (req, res, next) => {
   }
 };
 
-module.exports = { authenticate, adminAccessValidator };
+module.exports = { authenticate, ratingValidator };

@@ -1,22 +1,20 @@
 const { registerUser, loginUser } = require('./user');
 const {
-  addTodo,
-  fetchTodo,
-  updateTitleOfTodo,
-  deleteTheTodo,
-  updateStatusOfTodo,
-  allTodosForSingleUser,
-  adminAllTodos,
-} = require('./todo');
+  addProduct,
+  updateProduct,
+  deleteTheProduct,
+  allProducts,
+  fetchProduct,
+  rateTheProduct,
+} = require('./product');
 
 module.exports = {
   registerUser,
   loginUser,
-  addTodo,
-  fetchTodo,
-  updateTitleOfTodo,
-  deleteTheTodo,
-  updateStatusOfTodo,
-  allTodosForSingleUser,
-  adminAllTodos,
+  addProduct,
+  updateProduct,
+  deleteTheProduct,
+  allProducts,
+  fetchProduct,
+  rateTheProduct,
 };
