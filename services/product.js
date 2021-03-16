@@ -86,14 +86,11 @@ const updateSingleProductAvgRating = async (id, value) => db.one(updateProductRa
 
 const rateSingleProduct = async (product, rating, rater) => {
   const { id, name } = product;
-  console.log(id, name, rating, product.owner_id, rater);
   db.one(insertProductRating, [id, name, rating, product.owner_id, rater]);
   const calcAvgRating = await calculateSingleProduct(id);
-  console.log(calcAvgRating);
   const avgRating = parseFloat(calcAvgRating.average_rating).toFixed(2);
-  console.log(avgRating);
-  const y = await updateSingleProductAvgRating(id, avgRating);
-  return y;
+  const updatedData = await updateSingleProductAvgRating(id, avgRating);
+  return updatedData;
 };
 
 module.exports = {

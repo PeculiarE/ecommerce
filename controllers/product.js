@@ -45,7 +45,6 @@ const deleteTheProduct = async (req, res) => {
       message: 'Product deleted successfully',
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       status: 'Fail',
       message: 'Something went wrong',
@@ -87,14 +86,12 @@ const fetchProduct = async (req, res) => {
 const rateTheProduct = async (req, res) => {
   try {
     const updatedRating = await rateSingleProduct(req.product, req.body.rating, req.user.id);
-    console.log(updatedRating);
     return res.status(200).json({
       status: 'Success',
       message: 'Product rating updated successfully',
       data: updatedRating,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       status: 'Fail',
       message: 'Something went wrong',

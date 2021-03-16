@@ -12,7 +12,8 @@ const {
   validateProductAddition,
   checkIfProductExists,
   checkIfProductIsForCurrentUser,
-  ratingValidator,
+  verifyUserIsNotProductOwner,
+  verifyUserHasNotRatedProductBefore,
 } = require('../middlewares');
 
 const productRouter = Router();
@@ -23,6 +24,6 @@ productRouter.get('/product', allProducts);
 productRouter.put('/product/:productId', authenticate, checkIfProductExists, checkIfProductIsForCurrentUser, updateProduct);
 productRouter.delete('/product/:productId', authenticate, checkIfProductExists, checkIfProductIsForCurrentUser, deleteTheProduct);
 productRouter.get('/product/:productId', checkIfProductExists, fetchProduct);
-productRouter.put('/product/rating/:productId', authenticate, checkIfProductExists, ratingValidator, rateTheProduct);
+productRouter.put('/product/rating/:productId', authenticate, checkIfProductExists, verifyUserIsNotProductOwner, verifyUserHasNotRatedProductBefore, rateTheProduct);
 
 module.exports = productRouter;

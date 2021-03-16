@@ -1,6 +1,6 @@
 const { validateSignUp, checkIfUserExists, validateLogin } = require('./user');
 const { validateProductAddition, checkIfProductExists, checkIfProductIsForCurrentUser } = require('./product');
-const { authenticate, ratingValidator } = require('./auth');
+const { authenticate, verifyUserIsNotProductOwner, verifyUserHasNotRatedProductBefore } = require('./auth');
 
 module.exports = {
   validateSignUp,
@@ -10,6 +10,6 @@ module.exports = {
   authenticate,
   checkIfProductExists,
   checkIfProductIsForCurrentUser,
-  ratingValidator,
-//   adminAccessValidator,
+  verifyUserIsNotProductOwner,
+  verifyUserHasNotRatedProductBefore,
 };

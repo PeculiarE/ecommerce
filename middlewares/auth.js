@@ -27,22 +27,9 @@ const authenticate = (req, res, next) => {
     });
   }
 };
-const ratingValidator = async (req, res, next) => {
+const verifyUserIsNotProductOwner = async (req, res, next) => {
   try {
     if (req.user.id !== req.product.owner_id) {
-      const rater = await getAllRatings(req.product.id);
-      console.log(rater);
-      if (rater.length) {
-        rater.forEach((el) => {
-          if (String(el.rater_id) === String(req.user.id)) {
-            return res.status(403).json({
-              status: 'Fail',
-              message: 'You have already rated this product.',
-            });
-          }
-          return next();
-        });
-      }
       return next();
     }
     return res.status(403).json({
@@ -50,7 +37,26 @@ const ratingValidator = async (req, res, next) => {
       message: 'You are not allowed to rate your own product.',
     });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({
+      status: 'Fail',
+      message: 'Something went wrong',
+    });
+  }
+};
+const verifyUserHasNotRatedProductBefore = async (req, res, next) => {
+  try {
+    let rater = await getAllRatings(req.product.id);
+    if (rater.length) {
+      rater = rater.filter((el) => String(el.rater_id) === String(req.user.id));
+      if (rater.length) {
+        return res.status(500).json({
+          status: 'You have already rated this product',
+        });
+      }
+      return next();
+    }
+    return next();
+  } catch (error) {
     return res.status(500).json({
       status: 'Fail',
       message: 'Something went wrong',
@@ -58,4 +64,6 @@ const ratingValidator = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticate, ratingValidator };
+module.exports = {
+  authenticate, verifyUserIsNotProductOwner, verifyUserHasNotRatedProductBefore,
+};
